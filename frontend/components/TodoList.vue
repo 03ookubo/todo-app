@@ -142,11 +142,11 @@ const updateTodoStatus = async (todo: Todo) => {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to update todo');
+      throw new Error('TODOの更新に失敗しました。');
     }
   } catch (error) {
-    console.error('Failed to update todo:', error);
-    errorMessage.value = 'Failed to update todo';
+    console.error('TODOの更新に失敗しました。:', error);
+    errorMessage.value = 'TODOの更新に失敗しました。';
   }
 };
 

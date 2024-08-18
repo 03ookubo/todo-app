@@ -16,7 +16,7 @@ def get_db_connection():
         )
         return connection
     except Error as e:
-        print(f"Error connecting to database: {e}")
+        print(f"データベースの接続に失敗しました。: {e}")
         return None
 
 #TODOの取得
