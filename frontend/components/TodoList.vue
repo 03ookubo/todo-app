@@ -34,7 +34,6 @@
 
     <button v-if="!showForm" @click="showForm = true" class="add-task-button">新しいタスクを追加</button>
     <button v-if="selectedTodos.length" @click="deleteSelectedTodos" class="delete-task-button">選択したタスクを削除</button>
-
     <div v-if="showForm" class="form-container">
       <form @submit.prevent="addTodo" class="todo-form">
         <input v-model="newTodoTitle" placeholder="タスクタイトル" required class="input-field" />
@@ -68,18 +67,19 @@ const showForm = ref(false);
 const errorMessage = ref('');
 const selectedTodos = ref<Todo[]>([]);
 
+/*未完了タスクの表示 */
 const incompleteTodos = computed(() => {
   return todos.value
     .filter(todo => !todo.completed)
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
 });
-
+/*完了タスクの表示*/
 const completedTodos = computed(() => {
   return todos.value
     .filter(todo => todo.completed)
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
 });
-
+/*マウントされたとき(初期状態)の処理 */
 onMounted(async () => {
   try {
     const response = await fetch('http://localhost:5000/todos');
@@ -93,8 +93,9 @@ onMounted(async () => {
     errorMessage.value = 'タスクの読み込みに失敗しました';
   }
 });
-
+/*タスクの追加 */
 const addTodo = async () => {
+  /*入力値のチェック */
   if (newTodoTitle.value.trim() === '' || newTodoDueDate.value.trim() === '' || newTodoDetails.value.trim() === '') return;
 
   const newTodo = {
@@ -152,6 +153,7 @@ const updateTodoStatus = async (todo: Todo) => {
 
 const deleteSelectedTodos = async () => {
   try {
+    /*複数のタスクの削除処理を並列で行う */
     await Promise.all(selectedTodos.value.map(async todo => {
       const response = await fetch(`http://localhost:5000/todos/${todo.id}`, {
         method: 'DELETE',
@@ -169,7 +171,7 @@ const deleteSelectedTodos = async () => {
     errorMessage.value = 'Failed to delete selected todos';
   }
 };
-
+/*期日の整形 */
 const formatDate = (dateString: string) => {
   if (dateString == null) {
     return "なし"

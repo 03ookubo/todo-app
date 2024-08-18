@@ -33,7 +33,6 @@ def get_todos():
     cursor.close()
     connection.close()
 
-    # Convert date format to string
     for todo in todos:
         if todo['due_date']:
             todo['dueDate'] = todo['due_date'].strftime('%Y-%m-%d')  # Format date to YYYY-MM-DD
@@ -54,6 +53,7 @@ def add_todo():
         (data['title'], data['dueDate'], data['details'], data.get('completed', False))
     )
     connection.commit()
+    #レコードのIDを取得
     new_id = cursor.lastrowid
     cursor.close()
     connection.close()
